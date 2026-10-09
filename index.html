@@ -8,8 +8,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="description" content="Neon Drift: a fast neon endless runner. Jump, double-jump and dash through a glowing city.">
 <title>Neon Drift</title>
-<!-- Neon Drift: one self-contained file for GitHub Pages and itch.io. No ads, no payment code.
+<!-- Neon Drift: one self-contained file for GitHub Pages and itch.io. No payment code.
      >>> ANALYTICS: paste a gtag.js / Plausible snippet here if you want stats, then fill in Analytics.track. -->
+<script>
+/* Google AdSense (publisher ca-pub-7962215647782479). Only loaded on the GitHub Pages copy:
+   itch.io runs the game on its own domain, which AdSense won't serve ads on. */
+if (location.hostname === 'solothisgame234.github.io') {
+  const s = document.createElement('script');
+  s.async = true; s.crossOrigin = 'anonymous';
+  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7962215647782479';
+  document.head.appendChild(s);
+}
+</script>
 <style>
 /* ===== Theme: --h is driven live by the game's score-based hue ===== */
 :root{--h:190;--c1:hsl(var(--h),100%,62%);--c2:hsl(calc(var(--h) + 60),100%,66%);--hot:#ff2f6e;--amb:#ffb020;--gem:#29e6ff;--bg:#05010f;--ink:#eaf6ff;--dim:rgba(234,246,255,.62)}
