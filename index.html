@@ -8,9 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="description" content="Neon Drift: a fast neon endless runner. Jump, double-jump and dash through a glowing city.">
 <title>Neon Drift</title>
-<!-- >>> ADS (web): paste your network's loader <script> here, e.g. AdSense / H5 Games Ads,
-     CrazyGames SDK, GameDistribution or Poki SDK. Then fill in the Ads module (search ">>> ADS"). -->
-<!-- >>> ANALYTICS: paste your gtag.js / Plausible snippet here. Then fill in Analytics.track. -->
+<!-- Neon Drift: one self-contained file for GitHub Pages and itch.io. No ads, no payment code.
+     >>> ANALYTICS: paste a gtag.js / Plausible snippet here if you want stats, then fill in Analytics.track. -->
 <style>
 /* ===== Theme: --h is driven live by the game's score-based hue ===== */
 :root{--h:190;--c1:hsl(var(--h),100%,62%);--c2:hsl(calc(var(--h) + 60),100%,66%);--hot:#ff2f6e;--amb:#ffb020;--gem:#29e6ff;--bg:#05010f;--ink:#eaf6ff;--dim:rgba(234,246,255,.62)}
@@ -28,7 +27,6 @@ body.nocrt #crt{display:none}
 
 /* ===== Screens & panels ===== */
 .screen{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at center,rgba(5,1,15,.25),rgba(5,1,15,.82));animation:fade .3s ease}
-body.has-banner .screen{padding-bottom:76px}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .panel{position:relative;width:min(560px,100%);max-height:100%;overflow:auto;overscroll-behavior:contain;touch-action:pan-y;padding:24px 20px;text-align:center;border:1px solid hsla(var(--h),100%,62%,.55);border-radius:20px;background:linear-gradient(160deg,rgba(22,8,52,.86),rgba(6,2,20,.94));box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 0 40px hsla(var(--h),100%,55%,.25),0 0 120px hsla(var(--h),100%,55%,.12);animation:rise .4s cubic-bezier(.2,1.4,.4,1)}
 .panel.wide{width:min(760px,100%)}
@@ -43,7 +41,8 @@ body.has-banner .screen{padding-bottom:76px}
 .btn[disabled]{opacity:.4;cursor:default;transform:none;box-shadow:none;background:none}
 .btn.big{font-size:22px;padding:15px 58px;border-width:2px;color:#fff;background:linear-gradient(90deg,hsla(var(--h),100%,55%,.35),hsla(calc(var(--h) + 60),100%,60%,.35));box-shadow:0 0 24px hsla(var(--h),100%,60%,.5);animation:pulse 1.6s ease-in-out infinite}
 .btn.gold{border-color:rgba(41,230,255,.8);color:#c9fff6;box-shadow:0 0 14px rgba(41,230,255,.35)}
-.btn.ad::before{content:"▶ ";color:var(--amb)}
+.btn.support{border-color:rgba(255,110,170,.75);color:#ffd6e8}
+.btn.support:hover,.btn.support:focus-visible{background:rgba(255,80,150,.16);box-shadow:0 0 18px rgba(255,80,150,.5)}
 .badge{position:absolute;top:-8px;right:-8px;padding:2px 7px;border-radius:999px;background:var(--hot);color:#fff;font-size:9px;letter-spacing:.08em;box-shadow:0 0 10px var(--hot)}
 @keyframes pulse{50%{box-shadow:0 0 46px hsla(var(--h),100%,60%,.9)}}
 .row{display:flex;flex-wrap:wrap;justify-content:center;margin-top:6px}
@@ -115,11 +114,22 @@ body.has-banner .screen{padding-bottom:76px}
 .card canvas{width:110px;height:60px}
 .card h4{font-size:13px;letter-spacing:.14em}
 .card p{font-size:11px;color:var(--dim);line-height:1.4;min-height:30px}
+.card p.pow{min-height:0;margin-bottom:-4px;font-weight:900;letter-spacing:.1em;color:#c9fff6;text-shadow:0 0 10px var(--gem)}
 .card .btn{margin:2px 0 0;padding:9px 8px;font-size:11px;width:100%}
 .card .own{position:absolute;top:8px;right:9px;font-size:9px;letter-spacing:.12em;color:#7dffb0}
 .sec{font-size:11px;letter-spacing:.25em;color:var(--dim);text-align:left;margin-top:6px}
 .big-ico{font-size:30px;line-height:60px;height:60px;filter:drop-shadow(0 0 8px var(--c1))}
-#sandboxTag{font-size:10px;letter-spacing:.12em;color:var(--amb)}
+/* Supporter Pack */
+.sup{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.18em;color:#1d1200;background:linear-gradient(90deg,#fff1a6,#ffbf4d);box-shadow:0 0 14px rgba(255,200,80,.55);white-space:nowrap}
+.card.supcard{margin:8px 0 12px;align-items:stretch;text-align:left;gap:8px;border-color:rgba(255,200,80,.45);background:linear-gradient(135deg,rgba(255,190,80,.08),rgba(255,80,150,.06))}
+.card.supcard.eq{border-color:#ffcf6b;box-shadow:0 0 18px rgba(255,200,80,.35)}
+.sup-head{display:flex;justify-content:space-between;align-items:center}
+.card.supcard p{min-height:0;font-size:12px}
+.card.supcard .btn.support{width:auto;align-self:flex-start;padding:10px 18px;font-size:12px}
+.thanks{color:#ffd98a!important;font-weight:800}
+.redeem{display:flex;gap:6px;max-width:380px}
+.redeem input{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.35);color:#fff;font:700 12px system-ui;letter-spacing:.1em;text-transform:uppercase;user-select:text;-webkit-user-select:text;touch-action:auto}
+.redeem .btn{width:auto!important;margin:0!important}
 
 /* ===== Pause volume sliders ===== */
 .vol{display:grid;grid-template-columns:64px 1fr 38px;align-items:center;gap:10px;max-width:340px;margin:10px auto;font-size:12px;letter-spacing:.15em;color:var(--dim);touch-action:pan-x}
@@ -140,10 +150,26 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
 .dots i.on{background:var(--c1);box-shadow:0 0 10px var(--c1);transform:scale(1.25)}
 .red{color:var(--hot);font-weight:800} .amber{color:var(--amb);font-weight:800}
 
-/* ===== Ads: placeholder surfaces (replaced by your network's units) ===== */
-#adBanner{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:25;width:min(728px,100%);height:calc(60px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:center;background:rgba(5,1,15,.94);border-top:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.2em}
-#adOverlay{position:fixed;inset:0;z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(3,0,10,.97);text-align:center;padding:16px}
-.adbox{width:min(480px,92vw);aspect-ratio:16/9;border:2px dashed rgba(255,255,255,.3);border-radius:12px;display:grid;place-items:center;color:var(--dim);letter-spacing:.15em;font-size:13px;line-height:1.8}
+
+/* ===== Short screens (itch.io's 960x600 player, landscape phones) ===== */
+@media (max-height:640px){
+  .screen{padding:10px}
+  .panel{padding:14px 16px}
+  .logo{font-size:clamp(34px,9vh,58px)}
+  .tag{margin:6px 0 8px}
+  .keys,.rot{display:none}
+  .note{margin-top:4px;font-size:11px}
+  .btn{padding:9px 13px;margin:3px}
+  .btn.big{padding:11px 44px;font-size:18px}
+  .daily{margin:2px auto 6px;padding:7px 12px}
+  .best-line{margin-top:6px}
+  .over-title{font-size:clamp(28px,7vh,46px)}
+  .final{font-size:clamp(38px,10vh,62px);margin:4px 0 8px}
+  .stats{margin:2px 0 8px}
+  .stats div{padding:6px 4px}
+  .cring{width:76px;height:76px;margin:6px auto}
+  .cring span{width:62px;height:62px;font-size:26px}
+}
 
 #toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top));z-index:58;transform:translate(-50%,-30px);opacity:0;padding:10px 18px;border-radius:999px;background:rgba(10,4,30,.94);border:1px solid var(--c1);box-shadow:0 0 20px hsla(var(--h),100%,60%,.5);font-weight:700;letter-spacing:.06em;transition:.25s;pointer-events:none;max-width:92vw;text-align:center}
 #toast.show{transform:translate(-50%,0);opacity:1}
@@ -169,7 +195,7 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
 <!-- ============ Start screen ============ -->
 <div id="menu" class="screen">
   <div class="panel">
-    <div class="topbar"><span class="gem" data-gems>0</span><button class="btn gold" data-act="shop" style="margin:0">Shop<span class="badge hidden" data-shopbadge>NEW</span></button></div>
+    <div class="topbar"><span class="gem" data-gems>0</span><span class="sup hidden" data-supbadge>★ SUPPORTER</span><button class="btn gold" data-act="shop" style="margin:0">Shop<span class="badge hidden" data-shopbadge>NEW</span></button></div>
     <h1 class="logo">NEON<span>DRIFT</span></h1>
     <p class="tag">Ride the light · Dodge the red</p>
     <div id="challenge" class="hidden"></div>
@@ -180,6 +206,7 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
       <button class="btn" id="howBtn">How to play</button>
       <button class="btn" data-act="crt">CRT: ON</button>
       <button class="btn" data-act="snd">Sound: ON</button>
+      <button class="btn support" data-act="support">♥ Support the dev</button>
     </div>
     <div class="best-line">BEST <b data-best>0</b></div>
     <p class="note" data-comeback></p>
@@ -199,7 +226,7 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
       <button class="btn" id="restartBtn">Restart</button>
       <button class="btn" data-act="crt">CRT: ON</button>
       <button class="btn" data-act="menu">Menu</button>
-      <button class="btn gold" data-act="removeads" data-noads-hide>Remove ads</button>
+      <button class="btn support" data-act="support">♥ Support the dev</button>
     </div>
   </div>
 </div>
@@ -212,7 +239,6 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
     <div class="row">
       <button class="btn big" id="contToken">Use token</button>
       <button class="btn gold" id="contGems">Revive · <i class="gi"></i><b id="contCost">60</b></button>
-      <button class="btn ad" id="contAd">Watch ad to revive</button>
     </div>
     <button class="btn" id="contSkip" style="opacity:.7">No thanks</button>
   </div>
@@ -230,14 +256,15 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
       <div><b id="stCombo">x1</b><span>TOP MULT</span></div>
       <div><b id="stBest">0</b><span>BEST</span></div>
     </div>
-    <div class="earn"><span class="gem" id="earned">+0</span><button class="btn ad" id="doubleBtn">Watch ad · 2× crystals</button></div>
+    <div class="earn"><span class="gem" id="earned">+0</span><span class="sup hidden" id="supEarn"></span></div>
     <div id="dailyResult"></div>
     <div id="chalResult" class="hidden" style="margin:0 0 8px;font-weight:800;letter-spacing:.1em"></div>
     <button class="btn big" id="retryBtn">Retry</button>
     <div class="row">
       <button class="btn gold" data-act="shop">Shop<span class="badge hidden" data-shopbadge>NEW</span></button>
-      <button class="btn" id="shareBtn">Share score</button>
+      <button class="btn gold" id="shareBtn">Share score</button>
       <button class="btn" id="copyBtn">Copy number</button>
+      <button class="btn support" data-act="support">♥ Support</button>
       <button class="btn" data-act="menu">Menu</button>
     </div>
     <p class="note" data-comeback></p>
@@ -248,12 +275,14 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
 <!-- ============ Shop ============ -->
 <div id="shop" class="screen hidden">
   <div class="panel wide">
-    <div class="topbar"><span class="gem" data-gems>0</span><span id="sandboxTag" class="hidden">TEST STORE · purchases are simulated</span><button class="btn" id="shopClose" style="margin:0">Back</button></div>
+    <div class="topbar"><span class="gem" data-gems>0</span><span class="sup hidden" data-supbadge>★ SUPPORTER</span><button class="btn" id="shopClose" style="margin:0">Back</button></div>
     <div class="over-title cool" style="font-size:clamp(30px,7vw,44px)">SHOP</div>
-    <div class="sec">SHIPS</div>
+    <div class="sec">SHIPS · EACH HAS ITS OWN POWER</div>
     <div class="grid" id="skinGrid"></div>
     <div class="sec">BOOSTS &amp; EXTRAS</div>
     <div class="grid" id="itemGrid"></div>
+    <div class="sec">SUPPORT THE DEVELOPER</div>
+    <div class="card supcard" id="supCard"></div>
     <p class="sub">Crystals come from orbs (1 per 4), every 1,000 points, new bests, the daily challenge and the daily login bonus.</p>
   </div>
 </div>
@@ -269,15 +298,6 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
   </div>
 </div>
 
-<!-- ============ Ad surfaces ============ -->
-<!-- >>> ADS (banner): your banner unit renders inside #adBanner (e.g. an AdSense <ins> slot, 320x50 / 728x90). -->
-<div id="adBanner" class="hidden">AD · BANNER PLACEHOLDER</div>
-<!-- Placeholder for interstitial / rewarded video. Real networks draw their own overlay; this one only simulates timing. -->
-<div id="adOverlay" class="hidden">
-  <div class="adbox" id="adBox"></div>
-  <div id="adCount" class="sub" style="font-size:13px"></div>
-  <button class="btn" id="adClose">Close</button>
-</div>
 <div id="toast"></div>
 
 <script>
@@ -285,7 +305,7 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
 /* =====================================================================
    NEON DRIFT: single-file endless runner (HTML + CSS + vanilla JS)
    Sections: Config · Utils · Save · Audio · Input · Pools/Particles
-             · Analytics · Ads · IAP · Economy/Daily · Shop data
+             · Analytics · Supporter Pack · Economy/Daily · Shop data
              · World generation · Game state · Rendering · UI · Loop
    ===================================================================== */
 const DEBUG = /[?&]debug\b/.test(location.search);
@@ -324,9 +344,15 @@ const ECON = {
   REVIVE_COST: 60,            // crystals, at the second-chance prompt
   TOKEN_COST: 50,             // pre-bought second-chance token
   BOOST_PACK: 3, BOOST_COST: 120, BOOST_TIME: 30,
-  INTERSTITIAL_EVERY: 3,      // deaths between interstitials
-  INTERSTITIAL_GAP: 120,      // and at least this many seconds apart
-  INTERSTITIAL_GRACE_RUNS: 3, // never in a brand-new player's first runs
+};
+
+/* Supporter Pack (see the Supporter module). No payments happen in the game itself. */
+const SUPPORT = {
+  URL: 'https://stgojo123.itch.io/neon-drift',  // where "Support the Developer" goes
+  EDITION: false,          // true = this copy is the Supporter build and unlocks automatically
+  CODE_HASH: 'e90265f4',   // hash of the redeem code you give supporters
+  GIFT: 1000,              // one-time crystals when the pack unlocks
+  RUN_BONUS: 0.25,         // +25% crystals after every run for supporters
 };
 
 /* ---------------- Utils ---------------- */
@@ -340,7 +366,6 @@ const randi = (a, b) => Math.floor(rand(a, b + 1));
 const chance = p => Math.random() < p;
 const damp = (rate, dt) => 1 - Math.exp(-rate * dt);         // frame-rate independent smoothing
 const fmt = n => Math.floor(n).toLocaleString();
-const wait = ms => new Promise(r => setTimeout(r, ms));
 function circleRect(cx, cy, r, rx, ry, rw, rh) {
   const nx = clamp(cx, rx, rx + rw), ny = clamp(cy, ry, ry + rh), dx = cx - nx, dy = cy - ny;
   return dx * dx + dy * dy < r * r;
@@ -359,7 +384,7 @@ const Store = {
 };
 const Save = {
   data: Object.assign({
-    v: 1, best: 0, crystals: 0, removeAds: false,
+    v: 1, best: 0, crystals: 0, supporter: false,
     skins: ['classic'], skin: 'classic', boosts: 0, useBoost: true, tokens: 0,
     runs: 0, deaths: 0, lastLogin: '', streak: 0,
     daily: { day: '', best: 0, claimed: false },
@@ -455,7 +480,7 @@ const SFX = (() => {
     unlock,
     get on() { return on; },
     toggle() { on = !on; if (ctx) ramp(master.gain, masterLevel()); return on; },
-    duck(v) { ducked = v; if (ctx) ramp(master.gain, masterLevel()); },        // silence during ads
+    duck(v) { ducked = v; if (ctx) ramp(master.gain, masterLevel()); },        // mute everything while another overlay owns the screen
     setMusic(level) { musicLevel = level; if (ctx) ramp(music.gain, musicGain()); },
     setVolumes() { if (ctx) { ramp(music.gain, musicGain()); ramp(sfxBus.gain, S.sfxVol); } },
     setIntensity(v) { intensity = v; },
@@ -491,7 +516,7 @@ const DASH_KEYS = new Set(['ShiftLeft', 'ShiftRight', 'ArrowRight', 'KeyD', 'Key
 
 addEventListener('keydown', e => {
   SFX.unlock();
-  if (Ads.busy) return;                                   // an ad owns the screen
+  if (e.target instanceof HTMLInputElement && e.target.type === 'text') return;   // typing a redeem code
   if (JUMP_KEYS.has(e.code) || DASH_KEYS.has(e.code)) e.preventDefault();
   if (e.repeat) return;
   if (JUMP_KEYS.has(e.code)) { Input.keyHeld = true; if (!Game.onPrimary()) Input.jump = true; }
@@ -532,7 +557,7 @@ function pollGamepad() {
   const pads = navigator.getGamepads ? navigator.getGamepads() : [];
   let gp = null;
   for (const p of pads) if (p && p.connected) { gp = p; break; }
-  if (!gp || Ads.busy) return;
+  if (!gp) return;
   const b = i => !!(gp.buttons[i] && gp.buttons[i].pressed);
   const now = [b(0) || b(12), b(1) || b(2) || b(5) || b(7), b(9) || b(8)];   // A/Up · B/X/RB/RT · Start/Back
   if (now[0] && !padPrev[0]) { SFX.unlock(); if (!Game.onPrimary()) Input.jump = true; }
@@ -613,8 +638,8 @@ const FX = {
 };
 
 /* =====================================================================
-   BUSINESS LAYER: analytics, ads, purchases, economy, daily systems.
-   Every integration point is marked ">>> ANALYTICS", ">>> ADS" or ">>> IAP".
+   PLAYER ECONOMY: analytics hooks, Supporter Pack, crystals, daily systems.
+   Extension points are marked ">>> ANALYTICS" and ">>> PAYMENTS LATER".
    ===================================================================== */
 
 /* ---------------- Analytics hooks ---------------- */
@@ -622,7 +647,7 @@ const Analytics = {
   /**
    * Single funnel for every event. Events sent by the game:
    *   game_start {run, skin, boost}        game_over {score, distance, orbs, crystals, cause}
-   *   ad_watched {type, placement}         purchase_attempt / purchase_success {item, currency, price}
+   *   support_click, supporter_unlocked    purchase_attempt / purchase_success {item, currency, price}
    *   skin_equipped {skin}                 also: continue_used, daily_bonus, daily_challenge_complete, share
    */
   track(event, params = {}) {
@@ -635,117 +660,47 @@ const Analytics = {
   },
 };
 
-/* ---------------- Ads ----------------
-   Three placements, all behind this one module:
-     banner        bottom strip on menus only (never during play)
-     interstitial  between runs, every ECON.INTERSTITIAL_EVERY deaths, rate-limited
-     rewarded      opt-in only: revive, or 2x crystals after a run
-   "Remove Ads" turns off banner and interstitial. Rewarded stays available because
-   the player chooses it (standard practice, and it doesn't feel like an ad wall).
-   Until a network is wired in, a placeholder overlay simulates the timing so all
-   flows can be tested end to end. */
-const Ads = {
-  busy: false,
-  lastInterstitial: 0,
-  get removed() { return Save.data.removeAds; },
-
-  showBanner() {
-    if (this.removed) return this.hideBanner();
-    $('adBanner').classList.remove('hidden'); document.body.classList.add('has-banner');
-    // >>> ADS (banner): request or refresh your banner unit here, e.g.
-    //   (adsbygoogle = window.adsbygoogle || []).push({});          // AdSense <ins> inside #adBanner
-    //   window.CrazyGames?.SDK.banner.requestResponsiveBanner('adBanner');   // CrazyGames
+/* ---------------- Supporter Pack ----------------
+   Nothing is paid for inside the game. Players support you on itch.io (a paid download or
+   a donation), and the Supporter Pack unlocks in one of two ways:
+     1. SUPPORT.EDITION = true makes this file a Supporter build that unlocks on first launch
+        (upload that copy as the paid / supporters-only file on itch.io).
+     2. A redeem code you give supporters (itch.io thank-you message, Discord, email).
+        Only a hash of the code is stored, so it can't simply be read from the source.
+   To set your own code: open the game with ?debug, run Supporter.hashCode('YOUR-CODE')
+   in the browser console, and paste the result into SUPPORT.CODE_HASH. */
+const Supporter = {
+  get active() { return SUPPORT.EDITION || Save.data.supporter; },
+  /** "Support the Developer": opens your itch.io page in a new tab. */
+  open() {
+    Analytics.track('support_click', {});
+    // >>> PAYMENTS LATER: point SUPPORT.URL at a paid build, a donation page or a checkout.
+    window.open(SUPPORT.URL, '_blank', 'noopener');
   },
-  hideBanner() {
-    $('adBanner').classList.add('hidden'); document.body.classList.remove('has-banner');
-    // >>> ADS (banner): hide/destroy the banner here if your network needs it (most don't).
+  /** FNV-1a (32-bit) of the code, ignoring case and spaces. */
+  hashCode(code) {
+    const s = String(code).trim().toUpperCase().replace(/\s+/g, '');
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(16).padStart(8, '0');
   },
-
-  /** Called after each death. Resolves when it's safe to continue. */
-  async maybeInterstitial(placement) {
-    const s = Save.data, now = performance.now() / 1000;
-    if (this.removed || s.runs <= ECON.INTERSTITIAL_GRACE_RUNS) return;
-    if (s.deaths % ECON.INTERSTITIAL_EVERY !== 0) return;
-    if (this.lastInterstitial && now - this.lastInterstitial < ECON.INTERSTITIAL_GAP) return;
-    this.lastInterstitial = now;
-    await this._run('interstitial', placement, async () => {
-      // >>> ADS (interstitial): replace this placeholder with your network call, e.g.
-      //   await new Promise(r => adBreak({ type: 'next', name: placement, afterAd: r, adBreakDone: r }));  // H5 Games Ads
-      //   await new Promise(r => CrazyGames.SDK.ad.requestAd('midgame', { adFinished: r, adError: r }));  // CrazyGames
-      //   await AdMob.showInterstitial();                                                               // Capacitor AdMob
-      return this._placeholder('INTERSTITIAL', 3, true);
-    });
+  /** Returns 'ok', 'bad' or 'already'. */
+  redeem(code) {
+    if (Save.data.supporter) return 'already';
+    if (!code || this.hashCode(code) !== SUPPORT.CODE_HASH) return 'bad';
+    this.grant('code');
+    return 'ok';
   },
-
-  /** Opt-in rewarded video. Resolves true only if the reward was earned. */
-  async rewarded(placement) {
-    return this._run('rewarded', placement, async () => {
-      // >>> ADS (rewarded): replace this placeholder; resolve true ONLY on the network's reward callback, e.g.
-      //   return new Promise(r => adBreak({ type: 'reward', name: placement,
-      //     beforeReward: show => show(), adViewed: () => r(true), adDismissed: () => r(false), adBreakDone: i => i.breakStatus !== 'viewed' && r(false) }));
-      //   return new Promise(r => CrazyGames.SDK.ad.requestAd('rewarded', { adFinished: () => r(true), adError: () => r(false) }));
-      return this._placeholder('REWARDED VIDEO', 4, false);
-    });
-  },
-
-  /** Shared wrapper: mutes audio, blocks input, logs analytics. */
-  async _run(type, placement, show) {
-    if (this.busy) return false;
-    this.busy = true; SFX.duck(true);
-    let ok = false;
-    try { ok = await show(); } catch (e) { ok = false; }
-    SFX.duck(false); this.busy = false; Input.flush();
-    if (ok !== false) Analytics.track('ad_watched', { type, placement });
-    return ok;
-  },
-
-  /** Test-only stand-in for a real ad: counts down, can be closed early (no reward). */
-  _placeholder(label, secs, closeAnytime) {
-    return new Promise(resolve => {
-      const ov = $('adOverlay'), count = $('adCount'), close = $('adClose');
-      $('adBox').innerHTML = `AD PLACEHOLDER<br><b style="color:#fff">${label}</b><br>your network's creative shows here`;
-      ov.classList.remove('hidden');
-      let left = secs;
-      const tick = () => {
-        count.textContent = left > 0 ? `Reward in ${left}s` : 'Done';
-        if (closeAnytime) count.textContent = left > 0 ? `Ad ends in ${left}s` : 'Done';
-        close.textContent = left > 0 && !closeAnytime ? 'Close (no reward)' : 'Close';
-      };
-      tick();
-      const iv = setInterval(() => { left--; tick(); if (left <= 0) finish(true); }, 1000);
-      const finish = ok => { clearInterval(iv); close.onclick = null; ov.classList.add('hidden'); resolve(ok); };
-      close.onclick = () => finish(left <= 0 || closeAnytime);
-    });
+  /** One-time unlock: gold badge + crystal gift (crystal bonus per run is applied in gameOver). */
+  grant(source) {
+    const s = Save.data;
+    if (s.supporter) return false;
+    s.supporter = true; Save.commit();
+    Wallet.add(SUPPORT.GIFT, 'supporter');
+    Analytics.track('supporter_unlocked', { source });
+    return true;
   },
 };
-
-/* ---------------- In-app purchases (real money) ----------------
-   Only "Remove Ads" costs real money; everything else uses crystals.
-   SANDBOX simulates a successful purchase so you can test the flow.
-   Set it to false once a real store is connected. With SANDBOX off and no
-   store wired in, purchases fail safely instead of unlocking for free. */
-const IAP = {
-  SANDBOX: true,   // >>> IAP: set to false for release builds
-  products: { remove_ads: { price: '$2.99', name: 'Remove Ads' } },
-
-  async buy(id) {
-    const p = this.products[id];
-    Analytics.track('purchase_attempt', { item: id, currency: 'USD', price: p.price });
-    let ok = false;
-    // >>> IAP: start the real checkout here and verify the receipt on your server, e.g.
-    //   ok = await Payments.checkout(id);           // Stripe Checkout / Xsolla / Paddle on web
-    //   ok = await CrazyGames.SDK... / Poki ...      // portal-specific (many portals don't allow IAP: check their rules)
-    //   ok = await Billing.purchase(id);             // Google Play Billing (TWA) / StoreKit via Capacitor
-    if (this.SANDBOX) { await wait(500); ok = true; }
-    if (ok) Analytics.track('purchase_success', { item: id, currency: 'USD', price: p.price });
-    return ok;
-  },
-  /** Re-grant owned items (call after login / on app start with your store's restore API). */
-  async restore() {
-    // >>> IAP: query owned products and set Save.data.removeAds = true if "remove_ads" is owned.
-  },
-};
-if (IAP.SANDBOX) console.info('[Neon Drift] IAP sandbox is ON: purchases are simulated. Set IAP.SANDBOX = false before release.');
 
 /* ---------------- Economy & daily systems ---------------- */
 const Wallet = {
@@ -783,19 +738,28 @@ const Daily = {
   tomorrowBonus() { return ECON.LOGIN_BONUS[Math.min(Save.data.streak + 1, ECON.LOGIN_BONUS.length) - 1]; },
 };
 
-/* ---------------- Shop data: ship skins ----------------
-   hue: null = follows the world's shifting hue · number = fixed · 'cycle' = rainbow.
+/* ---------------- Shop data: ships and their powers ----------------
+   Every ship has one power, so picking a ship changes how you play.
+   Powers are bought with crystals earned in the game only. */
+const POWERS = {
+  combo:  { name: 'Combo Keeper', desc: 'Your combo timer lasts 3.2 s instead of 2.2 s.', window: 3.2 },
+  dash:   { name: 'Long Dash',    desc: 'Dashes last 40% longer and recharge in 0.6 s.', time: 1.4, cooldown: 0.6 },
+  magnet: { name: 'Super Magnet', desc: 'Pulls in orbs from almost twice as far.', radius: 240 },
+  shield: { name: 'Shield',       desc: 'Survives one crash per run. Falling still ends it.' },
+  jumps:  { name: 'Triple Jump',  desc: 'A third jump in mid-air.', max: 3 },
+};
+/* hue: null = follows the world's shifting hue · number = fixed · 'cycle' = rainbow.
    shape: polygon points for a ship pointing right (+x), radius ~22. */
 const SKINS = [
-  { id: 'classic', name: 'Drifter', price: 0,    desc: 'Takes on the color of the city.', hue: null,
+  { id: 'classic', name: 'Drifter', price: 0,    power: 'combo',  hue: null,
     shape: [[22, 0], [-14, -13], [-7, 0], [-14, 13]] },
-  { id: 'viper',   name: 'Viper',   price: 300,  desc: 'Toxic green needle.', hue: 135,
+  { id: 'viper',   name: 'Viper',   price: 300,  power: 'dash',   hue: 135,
     shape: [[26, 0], [-8, -7], [-16, -14], [-11, 0], [-16, 14], [-8, 7]] },
-  { id: 'solar',   name: 'Solar',   price: 600,  desc: 'Gold delta with a twin tail.', hue: 52,
+  { id: 'solar',   name: 'Solar',   price: 600,  power: 'magnet', hue: 52,
     shape: [[22, 0], [-12, -16], [-6, -4], [-16, 0], [-6, 4], [-12, 16]] },
-  { id: 'phantom', name: 'Phantom', price: 900,  desc: 'Pale violet stealth wing.', hue: 275, light: 80,
+  { id: 'phantom', name: 'Phantom', price: 900,  power: 'shield', hue: 275, light: 80,
     shape: [[24, 0], [2, -6], [-14, -17], [-8, 0], [-14, 17], [2, 6]] },
-  { id: 'prism',   name: 'Prism',   price: 1500, desc: 'Cycles the whole spectrum.', hue: 'cycle',
+  { id: 'prism',   name: 'Prism',   price: 1500, power: 'jumps',  hue: 'cycle',
     shape: [[21, 0], [2, -14], [-16, 0], [2, 14]] },
 ];
 const skinById = id => SKINS.find(s => s.id === id) || SKINS[0];
@@ -984,11 +948,28 @@ const Game = {
   score: 0, bonus: 0, distScore: 0, dist: 0, orbsN: 0, combo: 0, comboT: 0, mult: 1, maxMult: 1,
   speed: CFG.BASE_SPEED, camX: 0, camY: 0, hue: 190,
   trauma: 0, flash: 0, punch: 0, hitstop: 0, timeScale: 1, deathT: 0, ghostT: 0,
-  boostT: 0, invuln: 0, continued: false, contT: 0, cause: '', overAt: 0, busy: false,
-  runGems: 0, doubled: false, skin: SKINS[0], hinted: {},
+  boostT: 0, invuln: 0, continued: false, contT: 0, cause: '', overAt: 0,
+  skin: SKINS[0], hinted: {}, shield: false, powerHinted: '',
 
   shipHue() { return skinHue(this.skin, this.hue, this.t); },
   effMult() { return Math.max(this.mult, this.boostT > 0 ? 2 : 1); },
+
+  /* ---------- ship powers (see POWERS) ---------- */
+  has(power) { return this.skin.power === power; },
+  comboWindow() { return this.has('combo') ? POWERS.combo.window : CFG.COMBO_WINDOW; },
+  dashCooldown() { return this.has('dash') ? POWERS.dash.cooldown : CFG.DASH_CD; },
+  maxJumps() { return this.has('jumps') ? POWERS.jumps.max : 2; },
+  magnetRadius() { return this.has('magnet') ? POWERS.magnet.radius : 130; },
+  /** Phantom's shield: absorbs one crash per run, then you're briefly invulnerable. */
+  tryShield() {
+    if (!this.shield) return false;
+    const hue = this.shipHue();
+    this.shield = false; this.invuln = 1.2;
+    ring(P.x, P.y, 12, 150, 0.5, hue, 80); emit(P.x, P.y, 24, hue, FX.burst);
+    popText(P.x, P.y - 50, 'SHIELD!', hue, 80, 26);
+    SFX.smash(); this.trauma = Math.max(this.trauma, 0.5); this.flash = Math.max(this.flash, 0.25);
+    return true;
+  },
 
   /* ---------- lifecycle ---------- */
   start() {
@@ -1001,23 +982,26 @@ const Game = {
     if (s.useBoost && s.boosts > 0) { s.boosts--; this.boostT = ECON.BOOST_TIME; }
     s.runs++; Save.commit();
     this.skin = skinById(s.skin);
+    this.shield = this.has('shield');
     Input.flush(); Input.keyHeld = Input.ptrHeld = false;
     this.state = 'play';
-    UI.show('play'); Ads.hideBanner(); SFX.setMusic(0.32);
-    if (this.boostT > 0) { UI.hint('HEAD START · 2× SCORE', '#c9fff6'); SFX.revive(); }
+    UI.show('play'); SFX.setMusic(0.32);
+    // name the ship's power the first time each ship flies this session
+    let hintDelay = 0;
+    if (this.powerHinted !== this.skin.id) {
+      this.powerHinted = this.skin.id; hintDelay = 1900;
+      UI.hint(this.skin.name.toUpperCase() + ' · ' + POWERS[this.skin.power].name.toUpperCase(), `hsl(${this.shipHue()},100%,72%)`);
+    }
+    if (this.boostT > 0) {
+      SFX.revive();
+      setTimeout(() => { if (this.state === 'play') UI.hint('HEAD START · 2× SCORE', '#c9fff6'); }, hintDelay);
+    }
     Analytics.track('game_start', { run: s.runs, skin: s.skin, boost: this.boostT > 0 });
   },
-  async retry() {
-    if (this.busy) return;
-    this.busy = true;
-    await Ads.maybeInterstitial('retry');          // natural break: between runs, never mid-run
-    this.busy = false; this.start();
-  },
-  async toMenu() {
-    if (this.busy) return;
-    if (this.state === 'over') { this.busy = true; await Ads.maybeInterstitial('menu'); this.busy = false; }
+  retry() { this.start(); },
+  toMenu() {
     platforms.clear(); hazards.clear(); orbs.clear(); texts.clear();
-    this.state = 'menu'; UI.show('menu'); Ads.showBanner(); SFX.setMusic(0.2);
+    this.state = 'menu'; UI.show('menu'); SFX.setMusic(0.2);
   },
   pause() { if (this.state !== 'play') return; this.state = 'pause'; UI.show('pause'); SFX.setMusic(0.1); },
   resume() {
@@ -1027,7 +1011,6 @@ const Game = {
   },
   /** Space / Enter / Ⓐ outside of play. Returns true if consumed. */
   onPrimary() {
-    if (Ads.busy) return true;
     if (UI.modal === 'tutorial') { UI.tutNext(); return true; }
     if (UI.modal) return true;
     switch (this.state) {
@@ -1040,7 +1023,6 @@ const Game = {
   },
   /** Esc / P / Start. */
   onBack() {
-    if (Ads.busy) return;
     if (UI.modal === 'tutorial') return UI.tutFinish();
     if (UI.modal === 'shop') return UI.closeShop();
     if (this.state === 'play') this.pause();
@@ -1062,7 +1044,8 @@ const Game = {
         break;
       }
       case 'cont':
-        if (!Ads.busy) { this.contT -= dt; UI.contTick(this.contT); if (this.contT <= 0) this.gameOver(); }
+        this.contT -= dt; UI.contTick(this.contT);
+        if (this.contT <= 0) this.gameOver();
         updateParticles(dt * 0.3); break;
       case 'over': updateParticles(dt * 0.3); break;
       case 'pause': break;
@@ -1113,7 +1096,7 @@ const Game = {
   step(h) {
     if (P.buffer > 0) {
       if (P.ground || P.coyote > 0) this.jump(false);
-      else if (P.jumps < 2) this.jump(true);
+      else if (P.jumps < this.maxJumps()) this.jump(true);
     }
     const dashing = P.dashT > 0;
     const prevBottom = P.y + PR;
@@ -1139,7 +1122,7 @@ const Game = {
         P.y = pl.y - PR; P.vy = 0; P.ground = true; continue;
       }
       if (!pl.float && bottom > pl.y + 1 && P.y - PR < pl.y + pl.h) {
-        if (bottom - pl.y < 16 || this.invuln > 0) { P.y = pl.y - PR; P.vy = 0; P.ground = true; }   // step assist
+        if (bottom - pl.y < 16 || this.invuln > 0 || this.tryShield()) { P.y = pl.y - PR; P.vy = 0; P.ground = true; }   // step assist
         else { this.die('wall'); return; }
       }
     }
@@ -1162,8 +1145,8 @@ const Game = {
       }
       if (!hit) continue;
       if (z.type === H_DRONE || z.type === H_GATE) {
-        if (smashing) this.smash(z); else { this.die(z.type === H_GATE ? 'gate' : 'drone'); return; }
-      } else if (this.invuln <= 0) { this.die(z.type === H_SAW ? 'saw' : 'spike'); return; }
+        if (smashing || this.tryShield()) this.smash(z); else { this.die(z.type === H_GATE ? 'gate' : 'drone'); return; }
+      } else if (this.invuln <= 0 && !this.tryShield()) { this.die(z.type === H_SAW ? 'saw' : 'spike'); return; }
     }
   },
 
@@ -1175,14 +1158,14 @@ const Game = {
       P.vy = -CFG.JUMP_V; P.jumps = 1; P.ground = false; P.coyote = 0; P.sx = 0.7; P.sy = 1.3;
       SFX.jump(); emit(P.x - 4, P.y + PR, 8, hue, FX.dust, Math.PI * 0.8);
     } else {
-      P.vy = -CFG.DJUMP_V; P.jumps = 2; P.flip = 1; P.sx = 0.8; P.sy = 1.2;
+      P.vy = -CFG.DJUMP_V; P.jumps = Math.max(P.jumps, 1) + 1; P.flip = 1; P.sx = 0.8; P.sy = 1.2;
       SFX.djump(); ring(P.x, P.y + 8, 6, 46, 0.3, hue, 75); emit(P.x, P.y + 10, 10, hue, FX.burst, Math.PI / 2);
     }
   },
   dash() {
     const hue = this.shipHue();
-    P.dashT = CFG.DASH_TIME; P.dashCD = CFG.DASH_CD; P.vy = 0;
-    if (!P.ground && P.jumps >= 2) P.jumps = 1;     // an air dash gives the double jump back
+    P.dashT = CFG.DASH_TIME * (this.has('dash') ? POWERS.dash.time : 1); P.dashCD = this.dashCooldown(); P.vy = 0;
+    if (!P.ground && P.jumps >= 2) P.jumps--;       // an air dash gives one air jump back
     this.trauma = Math.max(this.trauma, 0.2); this.punch = 1;
     SFX.dash(); emit(P.x - 10, P.y, 16, hue, FX.burst, Math.PI); ring(P.x, P.y, 8, 60, 0.25, hue, 75);
   },
@@ -1197,7 +1180,7 @@ const Game = {
 
   /* ---------- scoring ---------- */
   addCombo() {
-    this.combo++; this.comboT = CFG.COMBO_WINDOW;
+    this.combo++; this.comboT = this.comboWindow();
     const m = Math.min(CFG.MAX_MULT, 1 + Math.floor(this.combo / 5));
     if (m > this.mult) {
       this.mult = m; this.maxMult = Math.max(this.maxMult, m);
@@ -1240,19 +1223,17 @@ const Game = {
   },
   afterDeath() {
     // offer one revive per run, only once a run is worth saving (no nagging on early deaths)
-    if (!this.continued && this.score >= 150) { this.state = 'cont'; this.contT = 6; UI.showContinue(); }
+    const s = Save.data, canRevive = s.tokens > 0 || s.crystals >= ECON.REVIVE_COST;
+    if (!this.continued && canRevive && this.score >= 150) { this.state = 'cont'; this.contT = 6; UI.showContinue(); }
     else this.gameOver();
   },
-  async useContinue(method) {
-    if (this.state !== 'cont' || Ads.busy) return;
+  useContinue(method) {
+    if (this.state !== 'cont') return;
     if (method === 'token') { if (Save.data.tokens <= 0) return; Save.data.tokens--; Save.commit(); }
     else if (method === 'gems') {
       Analytics.track('purchase_attempt', { item: 'revive', currency: 'crystals', price: ECON.REVIVE_COST });
       if (!Wallet.spend(ECON.REVIVE_COST)) return UI.toast('Not enough crystals');
       Analytics.track('purchase_success', { item: 'revive', currency: 'crystals', price: ECON.REVIVE_COST });
-    } else if (method === 'ad') {
-      const ok = await Ads.rewarded('revive');
-      if (!ok || this.state !== 'cont') return;
     }
     Analytics.track('continue_used', { method });
     this.revive();
@@ -1291,21 +1272,14 @@ const Game = {
       s.daily.claimed = true; dailyDone = true; gems += ECON.DAILY_TARGET_BONUS;
       Analytics.track('daily_challenge_complete', { score, target });
     }
-    this.runGems = gems; this.doubled = false;
+    const supBonus = Supporter.active ? Math.round(gems * SUPPORT.RUN_BONUS) : 0;
+    gems += supBonus;
     Wallet.add(gems, 'run');   // also commits the save
     Save.commit();
     Analytics.track('game_over', { score, distance: Math.floor(this.dist), orbs: this.orbsN, crystals: gems, cause: this.cause });
     if (newBest) SFX.best();
     SFX.setMusic(0.12);
-    UI.showOver({ score, newBest, gems, dailyDone, target });
-    Ads.showBanner();
-  },
-  async doubleGems() {
-    if (this.doubled || this.runGems <= 0) return;
-    const ok = await Ads.rewarded('double_crystals');
-    if (!ok || this.doubled) return;
-    this.doubled = true; Wallet.add(this.runGems, 'double'); SFX.coin();
-    UI.doubledGems(this.runGems * 2);
+    UI.showOver({ score, newBest, gems, supBonus, dailyDone, target });
   },
 
   /* ---------- world upkeep ---------- */
@@ -1316,11 +1290,11 @@ const Game = {
     }
   },
   updateOrbs(dt) {
-    const a = orbs.active, reach = PR + ORB_R + 8;
+    const a = orbs.active, reach = PR + ORB_R + 8, mr = this.magnetRadius(), mk = this.has('magnet') ? 11 : 9;
     for (let i = a.length - 1; i >= 0; i--) {
       const o = a[i]; o.t += dt;
       const dx = P.x - o.x, dy = P.y - o.y, d2 = dx * dx + dy * dy;
-      if (d2 < 130 * 130) { const k = damp(9, dt); o.x += dx * k; o.y += dy * k; }   // gentle magnet
+      if (d2 < mr * mr) { const k = damp(mk, dt); o.x += dx * k; o.y += dy * k; }   // orb magnet
       if (d2 < reach * reach) { const x = o.x, y = o.y; orbs.releaseAt(i); this.collect(x, y); }
     }
   },
@@ -1618,6 +1592,11 @@ function drawShip(hue, t) {
     const s = Math.sin(t * 10);
     ctx.beginPath(); ctx.arc(P.x, P.y, 30 + s * 2, 0, TAU);
     ctx.strokeStyle = `hsla(${hue},100%,72%,${0.35 + 0.2 * s})`; ctx.lineWidth = 2; ctx.stroke();
+  } else if (Game.shield) {               // Phantom's shield, still unused this run
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) { const a = i / 6 * TAU + t * 0.8; ctx.lineTo(P.x + Math.cos(a) * 28, P.y + Math.sin(a) * 28); }
+    ctx.closePath();
+    ctx.strokeStyle = `hsla(${hue},100%,78%,${0.3 + 0.12 * Math.sin(t * 4)})`; ctx.lineWidth = 1.5; ctx.stroke();
   }
 }
 /** Shop card preview of a skin. */
@@ -1749,7 +1728,7 @@ const UI = {
     document.body.classList.toggle('nocrt', !s.crt);
     $$('[data-act=crt]').forEach(b => b.textContent = 'CRT: ' + (s.crt ? 'ON' : 'OFF'));
     $$('[data-act=snd]').forEach(b => b.textContent = 'Sound: ' + (SFX.on ? 'ON' : 'OFF'));
-    $$('[data-noads-hide]').forEach(b => b.classList.toggle('hidden', s.removeAds));
+    $$('[data-supbadge]').forEach(e => e.classList.toggle('hidden', !Supporter.active));
   },
   toggleCRT() { Save.data.crt = !Save.data.crt; Save.commit(); this.applySettings(); },
   toggleSound() { Save.data.sound = SFX.toggle(); Save.commit(); this.applySettings(); },
@@ -1762,8 +1741,8 @@ const UI = {
     if (h.dist !== d) { h.dist = d; E.dist.textContent = d + ' M'; }
     const m = g.effMult();
     if (h.mult !== m) { h.mult = m; E.mult.textContent = 'x' + m; E.mult.classList.toggle('on', m > 1); }
-    E.comboBar.style.transform = `scaleX(${g.combo > 0 ? (g.comboT / CFG.COMBO_WINDOW).toFixed(3) : 0})`;
-    const cd = clamp(1 - Math.max(0, P.dashCD) / CFG.DASH_CD, 0, 1);
+    E.comboBar.style.transform = `scaleX(${g.combo > 0 ? (g.comboT / g.comboWindow()).toFixed(3) : 0})`;
+    const cd = clamp(1 - Math.max(0, P.dashCD) / g.dashCooldown(), 0, 1);
     if (h.cd !== cd) { h.cd = cd; E.dashFill.style.transform = `scaleX(${cd.toFixed(3)})`; E.dashPill.classList.toggle('ready', cd >= 1); }
     const beat = g.score > s.best;
     const bt = beat ? 'NEW BEST' : this.challenge > g.score ? 'BEAT ' + fmt(this.challenge) : 'BEST ' + fmt(s.best);
@@ -1824,7 +1803,7 @@ const UI = {
     $('contRing').style.background = `conic-gradient(var(--c1) ${(p * 360).toFixed(1)}deg, rgba(255,255,255,.1) 0)`;
     $('contNum').textContent = Math.ceil(Math.max(0, t));
   },
-  showOver({ score, newBest, gems, dailyDone, target }) {
+  showOver({ score, newBest, gems, supBonus, dailyDone, target }) {
     const s = Save.data;
     this.countUp(E.finalScore, score);
     $('newBest').classList.toggle('hidden', !newBest);
@@ -1833,7 +1812,8 @@ const UI = {
     $('stCombo').textContent = 'x' + Game.maxMult;
     $('stBest').textContent = fmt(s.best);
     $('earned').innerHTML = '<i class="gi"></i>+' + gems;
-    $('doubleBtn').classList.toggle('hidden', gems <= 0);
+    $('supEarn').classList.toggle('hidden', !supBonus);
+    $('supEarn').textContent = '★ +' + supBonus + ' supporter bonus';
     $('dailyResult').innerHTML = dailyDone
       ? `<span style="color:#7dffb0">DAILY CHALLENGE COMPLETE · +${ECON.DAILY_TARGET_BONUS}<i class="gi"></i></span>`
       : s.daily.claimed ? '' : `<span style="color:var(--dim)">Daily challenge: ${fmt(target - s.daily.best)} more points to go</span>`;
@@ -1848,7 +1828,6 @@ const UI = {
     this.syncGems();
     this.show('over');
   },
-  doubledGems(total) { $('earned').innerHTML = '<i class="gi"></i>+' + total + ' (2×)'; $('doubleBtn').classList.add('hidden'); this.toast('Crystals doubled!'); },
   countUp(el, to) {
     const t0 = performance.now();
     const tick = now => {
@@ -1881,7 +1860,6 @@ const UI = {
   /* ---------- shop ---------- */
   openShop() {
     this.modal = 'shop'; this.renderShop();
-    $('sandboxTag').classList.toggle('hidden', !IAP.SANDBOX);
     $('shop').classList.remove('hidden');
   },
   closeShop() {
@@ -1896,7 +1874,8 @@ const UI = {
       const owned = s.skins.includes(sk.id), eq = s.skin === sk.id;
       const card = document.createElement('div');
       card.className = 'card' + (eq ? ' eq' : '');
-      card.innerHTML = `${owned ? '<span class="own">OWNED</span>' : ''}<canvas></canvas><h4>${sk.name}</h4><p>${sk.desc}</p>`;
+      const pw = POWERS[sk.power];
+      card.innerHTML = `${owned ? '<span class="own">OWNED</span>' : ''}<canvas></canvas><h4>${sk.name}</h4><p class="pow">⚡ ${pw.name}</p><p>${pw.desc}</p>`;
       drawSkinPreview(card.querySelector('canvas'), sk);
       const b = document.createElement('button');
       b.className = 'btn' + (owned ? '' : ' gold');
@@ -1906,22 +1885,41 @@ const UI = {
       card.appendChild(b); sg.appendChild(card);
     }
     const items = [
-      { id: 'remove_ads', ico: '⊘', name: 'Remove Ads', desc: 'No banners or interstitials, forever. Supports the game.', label: IAP.products.remove_ads.price, done: s.removeAds },
       { id: 'boost', ico: '»', name: 'Head Start ×' + ECON.BOOST_PACK, desc: `2× score for the first ${ECON.BOOST_TIME}s of a run. You have ${s.boosts}.`, cost: ECON.BOOST_COST },
-      { id: 'token', ico: '♥', name: 'Second Chance', desc: `Revive once without an ad. You have ${s.tokens}.`, cost: ECON.TOKEN_COST },
+      { id: 'token', ico: '♥', name: 'Second Chance', desc: `Revive once after a crash. You have ${s.tokens}.`, cost: ECON.TOKEN_COST },
     ];
     for (const it of items) {
       const card = document.createElement('div');
       card.className = 'card';
-      card.innerHTML = `${it.done ? '<span class="own">OWNED</span>' : ''}<div class="big-ico">${it.ico}</div><h4>${it.name}</h4><p>${it.desc}</p>`;
+      card.innerHTML = `<div class="big-ico">${it.ico}</div><h4>${it.name}</h4><p>${it.desc}</p>`;
       const b = document.createElement('button');
       b.className = 'btn gold';
-      if (it.done) { b.textContent = 'Thank you ♥'; b.disabled = true; }
-      else if (it.cost) { b.innerHTML = '<i class="gi"></i>' + fmt(it.cost); b.disabled = s.crystals < it.cost; }
-      else b.textContent = it.label;
+      b.innerHTML = '<i class="gi"></i>' + fmt(it.cost); b.disabled = s.crystals < it.cost;
       b.onclick = () => this.buyItem(it.id);
       card.appendChild(b); ig.appendChild(card);
     }
+    this.renderSupporter();
+  },
+  /** Supporter Pack card: links out to itch.io, or redeems a supporter code. */
+  renderSupporter() {
+    const el = $('supCard'), on = Supporter.active;
+    el.classList.toggle('eq', on);
+    el.innerHTML =
+      `<div class="sup-head"><span class="sup">★ SUPPORTER PACK</span>${on ? '<span class="own">UNLOCKED</span>' : ''}</div>` +
+      `<p>A gold supporter badge, <b>${fmt(SUPPORT.GIFT)}</b> crystals right away and <b>+${Math.round(SUPPORT.RUN_BONUS * 100)}%</b> crystals after every run. It also funds new ships and levels.</p>` +
+      (on ? '<p class="thanks">Thank you for supporting Neon Drift ♥</p>'
+          : '<button class="btn support" id="supGet">♥ Get Supporter Pack</button>' +
+            '<form class="redeem" id="supForm"><input id="supCode" type="text" placeholder="Have a supporter code?" autocomplete="off" spellcheck="false" maxlength="40"><button class="btn" type="submit">Redeem</button></form>');
+    if (on) return;
+    $('supGet').onclick = () => { SFX.click(); Supporter.open(); };
+    $('supForm').onsubmit = e => {
+      e.preventDefault();
+      const r = Supporter.redeem($('supCode').value);
+      if (r === 'ok') {
+        SFX.best(); this.toast(`Supporter Pack unlocked! +${fmt(SUPPORT.GIFT)} crystals ♥`);
+        this.renderShop(); this.applySettings(); this.syncGems();
+      } else { SFX.comboLost(); this.toast(r === 'already' ? 'Already unlocked' : "That code didn't work"); }
+    };
   },
   buySkin(sk) {
     Analytics.track('purchase_attempt', { item: 'skin_' + sk.id, currency: 'crystals', price: sk.price });
@@ -1936,24 +1934,16 @@ const UI = {
     Analytics.track('skin_equipped', { skin: sk.id });
     this.renderShop();
   },
-  async buyItem(id) {
-    if (id === 'remove_ads') {
-      if (Save.data.removeAds) return;
-      const ok = await IAP.buy('remove_ads');
-      if (!ok) return this.toast('Purchase not completed');
-      Save.data.removeAds = true; Save.commit();
-      Ads.hideBanner(); SFX.coin(); this.toast('Ads removed. Thank you! ♥');
-    } else {
-      const cost = id === 'boost' ? ECON.BOOST_COST : ECON.TOKEN_COST;
-      Analytics.track('purchase_attempt', { item: id, currency: 'crystals', price: cost });
-      if (!Wallet.spend(cost)) return this.toast('Not enough crystals');
-      if (id === 'boost') Save.data.boosts += ECON.BOOST_PACK; else Save.data.tokens += 1;
-      Save.commit();
-      Analytics.track('purchase_success', { item: id, currency: 'crystals', price: cost });
-      SFX.coin(); this.toast(id === 'boost' ? 'Head Start ×' + ECON.BOOST_PACK + ' added' : 'Second Chance added');
-    }
+  buyItem(id) {
+    const cost = id === 'boost' ? ECON.BOOST_COST : ECON.TOKEN_COST;
+    Analytics.track('purchase_attempt', { item: id, currency: 'crystals', price: cost });
+    if (!Wallet.spend(cost)) return this.toast('Not enough crystals');
+    if (id === 'boost') Save.data.boosts += ECON.BOOST_PACK; else Save.data.tokens += 1;
+    Save.commit();
+    Analytics.track('purchase_success', { item: id, currency: 'crystals', price: cost });
+    SFX.coin(); this.toast(id === 'boost' ? 'Head Start ×' + ECON.BOOST_PACK + ' added' : 'Second Chance added');
     if (this.modal === 'shop') this.renderShop();
-    this.applySettings(); this.syncGems();
+    this.syncGems();
   },
 
   /* ---------- sharing ---------- */
@@ -1992,10 +1982,8 @@ function wire() {
   on('retryBtn', () => Game.retry());
   on('shareBtn', () => UI.share());
   on('copyBtn', () => UI.copy(String(Game.score), 'Score copied: ' + fmt(Game.score)));
-  on('doubleBtn', () => Game.doubleGems());
   on('contToken', () => Game.useContinue('token'));
   on('contGems', () => Game.useContinue('gems'));
-  on('contAd', () => Game.useContinue('ad'));
   on('contSkip', () => { if (Game.state === 'cont') Game.gameOver(); });
   on('shopClose', () => UI.closeShop());
   on('tutNext', () => UI.tutNext());
@@ -2010,7 +1998,7 @@ function wire() {
     else if (a === 'snd') UI.toggleSound();
     else if (a === 'menu') Game.toMenu();
     else if (a === 'shop') UI.openShop();
-    else if (a === 'removeads') UI.buyItem('remove_ads');
+    else if (a === 'support') Supporter.open();
   });
   $('boostChk').addEventListener('change', e => { Save.data.useBoost = e.target.checked; Save.commit(); });
   for (const [id, key] of [['volMusic', 'musicVol'], ['volSfx', 'sfxVol']]) {
@@ -2044,11 +2032,12 @@ function boot() {
   if (m) UI.challenge = Math.min(+m[1], 1e7);
   Daily.refresh();
   const bonus = Daily.claimLogin();
+  const edition = SUPPORT.EDITION && Supporter.grant('edition');   // Supporter build: unlock on first launch
   Game.skin = skinById(Save.data.skin);
   wire();
   Game.toMenu();
-  if (bonus) setTimeout(() => UI.toast(`Daily bonus +${bonus.bonus} crystals · day ${bonus.streak} streak`), 700);
-  IAP.restore();
+  if (edition) setTimeout(() => UI.toast(`Thanks for supporting! +${fmt(SUPPORT.GIFT)} crystals ♥`), 700);
+  else if (bonus) setTimeout(() => UI.toast(`Daily bonus +${bonus.bonus} crystals · day ${bonus.streak} streak`), 700);
   requestAnimationFrame(t => { last = t; frame(t); });
 }
 boot();
