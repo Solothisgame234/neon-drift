@@ -161,6 +161,24 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
 .red{color:var(--hot);font-weight:800} .amber{color:var(--amb);font-weight:800}
 
 
+/* ===== FPS cap picker (start screen + pause) ===== */
+.fps{max-width:440px;margin:10px auto 0}
+.fps-opts{display:flex;gap:6px}
+.fps-opts button{flex:1;padding:7px 4px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:var(--ink);font-family:inherit;font-size:12px;font-weight:800;line-height:1.2;letter-spacing:.08em;cursor:pointer}
+.fps-opts button small{display:block;margin-top:2px;font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--dim)}
+.fps-opts button.on{border-color:var(--c1);background:hsla(var(--h),100%,60%,.16);box-shadow:0 0 14px hsla(var(--h),100%,60%,.35)}
+.fps-note{margin-top:5px;font-size:10.5px;line-height:1.35;color:var(--dim)}
+
+/* ===== Support pop-up ===== */
+.panel.sm{width:min(470px,100%)}
+.panel.sm .over-title{font-size:clamp(24px,6vw,36px)}
+.sm-text{margin:10px 0 14px;font-size:13px;line-height:1.5;color:var(--dim)}
+.sm-reward{margin:2px 0 8px;font-size:12px;letter-spacing:.06em;color:#9ff}
+.sm-from{font-size:11px;font-weight:900;letter-spacing:.22em;color:var(--c1)}
+.sm-quote{margin:14px 0;font-size:16px;line-height:1.55}
+.sm-bar{height:5px;margin:0 0 14px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}
+.sm-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--c1),var(--c2));transform:scaleX(0);transform-origin:left}
+
 /* ===== Short screens (itch.io's 960x600 player, landscape phones) ===== */
 @media (max-height:640px){
   .screen{padding:10px}
@@ -218,6 +236,7 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
       <button class="btn" data-act="snd">Sound: ON</button>
       <button class="btn support" data-act="support">♥ Support the dev</button>
     </div>
+    <div class="fps" data-fps></div>
     <div class="best-line">BEST <b data-best>0</b></div>
     <p class="note" data-comeback></p>
     <p class="keys"><kbd>Space</kbd>/<kbd>↑</kbd> jump · <kbd>Shift</kbd>/<kbd>→</kbd> dash · <kbd>P</kbd> pause · <kbd>C</kbd> CRT · <kbd>M</kbd> mute · gamepad ready</p>
@@ -232,11 +251,12 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
     <div class="row" style="margin-top:12px"><button class="btn big" id="resumeBtn">Resume</button></div>
     <label class="vol">MUSIC <input type="range" min="0" max="100" id="volMusic"><output id="volMusicOut"></output></label>
     <label class="vol">SFX <input type="range" min="0" max="100" id="volSfx"><output id="volSfxOut"></output></label>
+    <div class="fps" data-fps></div>
     <div class="row">
       <button class="btn" id="restartBtn">Restart</button>
       <button class="btn" data-act="crt">CRT: ON</button>
       <button class="btn" data-act="menu">Menu</button>
-      <button class="btn support" data-act="support">♥ Support the dev</button>
+      <button class="btn support" data-act="support">♥ Support the Developer</button>
     </div>
   </div>
 </div>
@@ -274,7 +294,7 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
       <button class="btn gold" data-act="shop">Shop<span class="badge hidden" data-shopbadge>NEW</span></button>
       <button class="btn gold" id="shareBtn">Share score</button>
       <button class="btn" id="copyBtn">Copy number</button>
-      <button class="btn support" data-act="support">♥ Support</button>
+      <button class="btn support" data-act="support">♥ Support the Developer</button>
       <button class="btn" data-act="menu">Menu</button>
     </div>
     <p class="note" data-comeback></p>
@@ -294,6 +314,29 @@ kbd{display:inline-block;padding:1px 7px;border-radius:6px;border:1px solid rgba
     <div class="sec">SUPPORT THE DEVELOPER</div>
     <div class="card supcard" id="supCard"></div>
     <p class="sub">Crystals come from orbs (1 per 4), every 1,000 points, new bests, the daily challenge and the daily login bonus.</p>
+  </div>
+</div>
+
+<!-- ============ Support pop-up (every few game overs, always optional) ============ -->
+<div id="supModal" class="screen hidden">
+  <div class="panel sm">
+    <div id="smAsk">
+      <div class="over-title cool">ENJOYING NEON DRIFT?</div>
+      <p class="sm-text">Neon Drift is free and made by one developer. If you'd like to help, here's how. It's completely optional.</p>
+      <button class="btn big" id="smWatch">▶ Watch a short message</button>
+      <p class="sm-reward" id="smReward"></p>
+      <div class="row">
+        <button class="btn support" id="smGet">★ Get Supporter Pack</button>
+        <button class="btn" id="smLater">Maybe later</button>
+      </div>
+      <p class="sub">The Supporter Pack is on the Neon Drift page on itch.io.</p>
+    </div>
+    <div id="smMsg" class="hidden">
+      <div class="sm-from">A MESSAGE FROM THE DEVELOPER</div>
+      <p class="sm-quote" id="smQuote"></p>
+      <div class="sm-bar"><i id="smBar"></i></div>
+      <button class="btn big gold" id="smClaim" disabled>5…</button>
+    </div>
   </div>
 </div>
 
@@ -358,12 +401,23 @@ const ECON = {
 
 /* Supporter Pack (see the Supporter module). No payments happen in the game itself. */
 const SUPPORT = {
-  URL: 'https://stgojo123.itch.io/neon-drift',  // where "Support the Developer" goes
-  EDITION: false,          // true = this copy is the Supporter build and unlocks automatically
+  URL: 'https://stgojo123.itch.io/neon-drift',  // where every Support button goes (itch.io handles payments)
+  ASK_EVERY: 3,            // the Support pop-up shows after every 3rd game over (never for supporters)
+  MSG_REWARD: 15,          // crystals for watching the short developer message
+  MSG_PER_DAY: 5,          // rewarded messages per day; after that the message is just a thank-you
+  MSG_SECONDS: 5,          // length of that message
+  EDITION: false,         // true = this copy is the Supporter build and unlocks automatically
   CODE_HASH: 'e90265f4',   // hash of the redeem code you give supporters
   GIFT: 1000,              // one-time crystals when the pack unlocks
   RUN_BONUS: 0.25,         // +25% crystals after every run for supporters
 };
+/* The "short message" in the Support pop-up, shown in turn. */
+const DEV_MSGS = [
+  'Thanks for playing Neon Drift! It is made by one developer, and every share, rating and comment on itch.io helps it reach more players.',
+  'Tip: a dash in mid-air keeps your height. Save it for the widest gaps.',
+  'New ships and levels are on the way. Supporters on itch.io help make them happen.',
+  'Tip: amber gates and drones break when you dash through them. Red hazards never do.',
+];
 
 /* ---------------- Utils ---------------- */
 const TAU = Math.PI * 2;
@@ -399,6 +453,8 @@ const Save = {
     runs: 0, deaths: 0, lastLogin: '', streak: 0,
     daily: { day: '', best: 0, claimed: false },
     tut: false, crt: true, sound: true, musicVol: 0.7, sfxVol: 0.9,
+    fps: null,               // frame cap: 30, 60 or 0 (unlimited); null = 60 until the first-run check picks
+    msgDay: '', msgN: 0,     // rewarded developer messages watched today
   }, Store.get('save', {})),
   commit() { Store.set('save', this.data); },
 };
@@ -803,7 +859,7 @@ const addSpike = (x, top) => addHazard(H_SPIKE, x, top - 34, 36, 34, 0);
 const addSaw = (x, y, r, amp, spd) => addHazard(H_SAW, x, y, 0, 0, r, amp, spd);
 const addDrone = (x, y) => addHazard(H_DRONE, x, y, 0, 0, 20, 12, rand(2, 3.5));
 const addGate = (x, top) => addHazard(H_GATE, x, top - 1400, 28, 1400, 0);
-function addOrb(x, y) { const o = orbs.get(); o.x = x; o.y = y; o.t = Math.random() * TAU; }
+function addOrb(x, y) { const o = orbs.get(); o.x = x; o.y = y; o.t = Math.random() * TAU; o.mag = 0; }
 
 /* --- Jump physics, used by the generator so every gap is clearable at the current speed --- */
 const T_APEX = CFG.JUMP_V / CFG.GRAVITY;
@@ -957,7 +1013,7 @@ const Game = {
   state: 'menu', t: 0, runT: 0,
   score: 0, bonus: 0, distScore: 0, dist: 0, orbsN: 0, combo: 0, comboT: 0, mult: 1, maxMult: 1,
   speed: CFG.BASE_SPEED, camX: 0, camY: 0, hue: 190,
-  trauma: 0, flash: 0, punch: 0, hitstop: 0, timeScale: 1, deathT: 0, ghostT: 0,
+  trauma: 0, flash: 0, punch: 0, hitstop: 0, timeScale: 1, deathT: 0, ghostT: 0, trailAcc: 0, fxAcc: 0,
   boostT: 0, invuln: 0, continued: false, contT: 0, cause: '', overAt: 0,
   skin: SKINS[0], hinted: {}, shield: false, powerHinted: '',
 
@@ -1035,6 +1091,7 @@ const Game = {
   onBack() {
     if (UI.modal === 'tutorial') return UI.tutFinish();
     if (UI.modal === 'shop') return UI.closeShop();
+    if (UI.modal === 'support') return UI.closeSupport();
     if (this.state === 'play') this.pause();
     else if (this.state === 'pause') this.resume();
     else if (this.state === 'cont') this.gameOver();
@@ -1075,14 +1132,14 @@ const Game = {
     this.runT += dt;
     if (Input.jump) P.buffer = CFG.JUMP_BUFFER;
     if (Input.dash && P.dashCD <= 0) this.dash();
-    const x0 = P.x, steps = Math.ceil(dt / (1 / 120)), h = dt / steps;   // sub-steps: no tunnelling at high speed
+    const x0 = P.x, y0 = P.y, steps = Math.ceil(dt / (1 / 120)), h = dt / steps;   // sub-steps: no tunnelling at high speed
     for (let i = 0; i < steps && P.alive; i++) this.step(h);
     P.buffer -= dt; P.dashCD -= dt;
     if (this.invuln > 0) this.invuln -= dt;
     if (this.boostT > 0) this.boostT -= dt;
     this.updateHazards(dt);
     if (!P.alive) return;
-    this.updateOrbs(dt);
+    this.updateOrbs(dt, P.x - x0, P.y - y0);
 
     // scoring & difficulty
     this.distScore += (P.x - x0) / 40 * (this.boostT > 0 ? 2 : 1);
@@ -1104,6 +1161,12 @@ const Game = {
 
   /** One physics sub-step: movement, platforms, hazards. */
   step(h) {
+    if ((this.trailAcc += h) >= 1 / 60) {   // ribbon: one point every 1/60 s at any frame rate
+      this.trailAcc -= 1 / 60;
+      const tr = P.trail;
+      for (let i = tr.length - 1; i > 0; i--) { tr[i].x = tr[i - 1].x; tr[i].y = tr[i - 1].y; }
+      tr[0].x = P.x; tr[0].y = P.y;
+    }
     if (P.buffer > 0) {
       if (P.ground || P.coyote > 0) this.jump(false);
       else if (P.jumps < this.maxJumps()) this.jump(true);
@@ -1290,6 +1353,8 @@ const Game = {
     if (newBest) SFX.best();
     SFX.setMusic(0.12);
     UI.showOver({ score, newBest, gems, supBonus, dailyDone, target });
+    if (!Supporter.active && !newBest && s.deaths % SUPPORT.ASK_EVERY === 0)
+      setTimeout(() => UI.openSupport(), 1100);   // every few runs, never over a new best
   },
 
   /* ---------- world upkeep ---------- */
@@ -1299,13 +1364,20 @@ const Game = {
       if (z.amp) z.y = z.by + Math.sin(z.t * z.spd) * z.amp;
     }
   },
-  updateOrbs(dt) {
-    const a = orbs.active, reach = PR + ORB_R + 8, mr = this.magnetRadius(), mk = this.has('magnet') ? 11 : 9;
+  /** sdx/sdy: how far the ship moved this frame. A caught orb rides along with the ship and closes
+      the gap on top of that, so it always lands; it can never trail behind a fast ship. */
+  updateOrbs(dt, sdx, sdy) {
+    const a = orbs.active, reach = PR + ORB_R + 8, mr = this.magnetRadius(), k = damp(this.has('magnet') ? 16 : 13, dt);
     for (let i = a.length - 1; i >= 0; i--) {
       const o = a[i]; o.t += dt;
-      const dx = P.x - o.x, dy = P.y - o.y, d2 = dx * dx + dy * dy;
-      if (d2 < mr * mr) { const k = damp(mk, dt); o.x += dx * k; o.y += dy * k; }   // orb magnet
-      if (d2 < reach * reach) { const x = o.x, y = o.y; orbs.releaseAt(i); this.collect(x, y); }
+      let dx = P.x - o.x, dy = P.y - o.y;
+      if (!o.mag && dx * dx + dy * dy < mr * mr) o.mag = 1;   // orb magnet: once caught, stays caught (mag = 1 + seconds held)
+      if (o.mag) {
+        o.x += sdx; o.y += sdy; o.mag += dt;
+        dx = P.x - o.x; dy = P.y - o.y; o.x += dx * k; o.y += dy * k;
+        dx = P.x - o.x; dy = P.y - o.y;
+      }
+      if (dx * dx + dy * dy < reach * reach || o.mag > 1.35) { const x = o.x, y = o.y; orbs.releaseAt(i); this.collect(x, y); }
     }
   },
   updateShip(dt) {
@@ -1314,11 +1386,14 @@ const Game = {
     const target = P.ground || P.dashT > 0 ? 0 : clamp(P.vy / 1500, -0.55, 0.85);
     P.ang = lerp(P.ang, target, damp(14, dt));
     P.flip = Math.max(0, P.flip - dt * 2.6);
-    for (let i = P.trail.length - 1; i > 0; i--) { P.trail[i].x = P.trail[i - 1].x; P.trail[i].y = P.trail[i - 1].y; }
-    P.trail[0].x = P.x; P.trail[0].y = P.y;
-    const c = Math.cos(P.ang), s = Math.sin(P.ang);
-    emit(P.x - c * 14, P.y - s * 14, P.dashT > 0 ? 3 : 1, hue + 30, FX.thrust, Math.PI + P.ang);
-    if (P.ground && chance(0.35)) emit(P.x - 6, P.y + PR, 1, hue, FX.grind, -Math.PI * 0.85);
+    P.trail[0].x = P.x; P.trail[0].y = P.y;   // the rest of the ribbon is sampled in step(), at a fixed rate
+    // particles per second, not per frame, so 30 FPS, 60 FPS and Unlimited all look the same
+    const n = Math.floor(this.fxAcc += dt * 60); this.fxAcc -= n;
+    if (n > 0) {
+      const c = Math.cos(P.ang), s = Math.sin(P.ang);
+      emit(P.x - c * 14, P.y - s * 14, n * (P.dashT > 0 ? 3 : 1), hue + 30, FX.thrust, Math.PI + P.ang);
+      if (P.ground && chance(1 - Math.pow(0.65, n))) emit(P.x - 6, P.y + PR, 1, hue, FX.grind, -Math.PI * 0.85);
+    }
     if (P.dashT > 0 && (this.ghostT -= dt) <= 0) {
       this.ghostT = 0.03;
       const g = P.ghosts[P.gi++ % P.ghosts.length]; g.x = P.x; g.y = P.y; g.a = P.ang; g.life = 0.25;
@@ -1739,7 +1814,18 @@ const UI = {
     $$('[data-act=crt]').forEach(b => b.textContent = 'CRT: ' + (s.crt ? 'ON' : 'OFF'));
     $$('[data-act=snd]').forEach(b => b.textContent = 'Sound: ' + (SFX.on ? 'ON' : 'OFF'));
     $$('[data-supbadge]').forEach(e => e.classList.toggle('hidden', !Supporter.active));
+    this.renderFps();
   },
+  /** FPS cap picker, shown on the start screen and in Pause. */
+  renderFps() {
+    const cur = Save.data.fps ?? 60;
+    const opts = [[30, '30 FPS', 'Recommended for most devices'], [60, '60 FPS', 'For stronger devices'], [0, 'Unlimited', 'Matches your screen']];
+    const html = '<div class="fps-opts">' +
+      opts.map(([v, name, desc]) => `<button class="${v === cur ? 'on' : ''}" data-act="fps" data-v="${v}">${name}<small>${desc}</small></button>`).join('') +
+      '</div><p class="fps-note">Higher FPS is for better-performing devices. Lower FPS improves smoothness on weaker phones/PCs.</p>';
+    $$('[data-fps]').forEach(el => { el.innerHTML = html; });
+  },
+  setFps(v) { Save.data.fps = v; Save.commit(); this.renderFps(); Analytics.track('fps_set', { cap: v }); },
   toggleCRT() { Save.data.crt = !Save.data.crt; Save.commit(); this.applySettings(); },
   toggleSound() { Save.data.sound = SFX.toggle(); Save.commit(); this.applySettings(); },
 
@@ -1877,6 +1963,50 @@ const UI = {
     if (Game.state === 'menu') this.refreshMenu();
     this.syncGems();
   },
+
+  /* ---------- Support pop-up: a polite ask every few game overs. No ad network, so ad blockers
+     and Brave can't break it, and every option (including "Maybe later") is one tap. ---------- */
+  msgsLeft() {
+    const s = Save.data;
+    if (s.msgDay !== Daily.key()) { s.msgDay = Daily.key(); s.msgN = 0; }
+    return SUPPORT.MSG_PER_DAY - s.msgN;
+  },
+  openSupport() {
+    if (this.modal || Game.state !== 'over') return;   // player already moved on
+    this.modal = 'support';
+    const left = this.msgsLeft();
+    $('smAsk').classList.remove('hidden'); $('smMsg').classList.add('hidden');
+    $('smReward').innerHTML = left > 0
+      ? `Get <b>+${SUPPORT.MSG_REWARD}</b><i class="gi"></i> for watching · ${left} left today`
+      : 'No crystal rewards left today. Come back tomorrow!';
+    $('supModal').classList.remove('hidden');
+    Analytics.track('support_modal', { action: 'shown' });
+  },
+  supportWatch() {
+    Analytics.track('support_modal', { action: 'watch' });
+    $('smAsk').classList.add('hidden'); $('smMsg').classList.remove('hidden');
+    $('smQuote').textContent = DEV_MSGS[Save.data.deaths % DEV_MSGS.length];
+    const btn = $('smClaim'), bar = $('smBar'), dur = SUPPORT.MSG_SECONDS * 1000, t0 = performance.now();
+    btn.disabled = true;
+    const tick = now => {
+      if (this.modal !== 'support') return;
+      const k = Math.min(1, (now - t0) / dur);
+      bar.style.transform = `scaleX(${k.toFixed(3)})`;
+      if (k < 1) { btn.textContent = Math.ceil((dur - (now - t0)) / 1000) + '…'; requestAnimationFrame(tick); return; }
+      btn.disabled = false;
+      btn.innerHTML = this.msgsLeft() > 0 ? `Claim +${SUPPORT.MSG_REWARD}<i class="gi"></i>` : 'Thanks! ♥';
+    };
+    requestAnimationFrame(tick);
+  },
+  supportClaim() {
+    if (this.msgsLeft() > 0) {
+      Save.data.msgN++;
+      Wallet.add(SUPPORT.MSG_REWARD, 'message');   // also commits the save
+      SFX.best(); this.toast(`+${SUPPORT.MSG_REWARD} crystals · thanks for watching ♥`);
+    }
+    this.closeSupport();
+  },
+  closeSupport() { this.modal = null; $('supModal').classList.add('hidden'); this.syncGems(); },
   renderShop() {
     const s = Save.data, sg = $('skinGrid'), ig = $('itemGrid');
     sg.innerHTML = ''; ig.innerHTML = '';
@@ -2009,7 +2139,12 @@ function wire() {
     else if (a === 'menu') Game.toMenu();
     else if (a === 'shop') UI.openShop();
     else if (a === 'support') Supporter.open();
+    else if (a === 'fps') UI.setFps(+b.dataset.v);
   });
+  on('smWatch', () => UI.supportWatch());
+  on('smClaim', () => UI.supportClaim());
+  on('smGet', () => { Analytics.track('support_modal', { action: 'supporter_pack' }); Supporter.open(); UI.closeSupport(); });
+  on('smLater', () => { Analytics.track('support_modal', { action: 'later' }); UI.closeSupport(); });
   $('boostChk').addEventListener('change', e => { Save.data.useBoost = e.target.checked; Save.commit(); });
   for (const [id, key] of [['volMusic', 'musicVol'], ['volSfx', 'sfxVol']]) {
     const el = $(id);
@@ -2023,17 +2158,42 @@ function wire() {
 /* =====================================================================
    MAIN LOOP
    ===================================================================== */
-let last = performance.now();
+let last = performance.now(), prevVsync = last, vsync = 16.7, due = 0;
 function frame(now) {
   requestAnimationFrame(frame);
-  const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));   // clamp: no huge jumps after a stall
+  vsync = clamp(vsync * 0.9 + (now - prevVsync) * 0.1, 4, 50); prevVsync = now;   // screen refresh interval
+  const cap = Save.data.fps ?? 60;                 // 30, 60 or 0 = unlimited (screen refresh rate)
+  if (cap) {
+    // frame budget: render on the vsync closest to each 1/cap tick, so 60 means 60 on 60, 72, 120 or 144 Hz
+    const iv = 1000 / cap;
+    if (now < due - vsync * 0.5) return;
+    due = now - due > iv ? now + iv : due + iv;      // after a stall, restart the schedule instead of catching up
+  }
+  const raw = (now - last) / 1000;
+  const dt = Math.min(0.05, Math.max(0, raw));   // clamp: no huge jumps after a stall
   last = now;
+  FpsCheck.sample(raw);
   pollGamepad();
   Game.update(dt);
   render();
   if (Game.state === 'play') UI.hud();
   Input.flush();
 }
+
+/** First-run check: a device that can't hold ~50 FPS gets the 30 FPS cap, which paces more evenly.
+    Runs once (while Save.data.fps is still null), over 4 s of real play. */
+const FpsCheck = {
+  t: 0, n: 0,
+  sample(raw) {
+    if (Save.data.fps !== null || Game.state !== 'play' || Game.runT < 1 || raw > 0.25) return;
+    this.t += raw; this.n++;
+    if (this.t < 4) return;
+    const fps = this.n / this.t;
+    Save.data.fps = fps < 50 ? 30 : 60; Save.commit();
+    Analytics.track('fps_auto', { measured: Math.round(fps), cap: Save.data.fps });
+    if (Save.data.fps === 30) UI.toast('Switched to 30 FPS for smoother play · change it in Pause');
+  },
+};
 
 function boot() {
   resize();
