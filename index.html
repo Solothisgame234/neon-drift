@@ -1789,6 +1789,7 @@ const UI = {
   modal: null, challenge: 0, tutStep: 0, tutThenPlay: false, lastHue: -1, _hud: {}, _hintT: 0, _toastT: 0,
 
   show(state) {
+    if (state !== 'over' && this.modal === 'support') this.closeSupport();   // never leave the pop-up over a run
     for (const id of ['menu', 'pause', 'over', 'cont']) $(id).classList.toggle('hidden', id !== state);
     $('hud').classList.toggle('hidden', !['play', 'pause', 'dying'].includes(state));
     $('touchHints').classList.toggle('hidden', !(Input.touch && state === 'play'));
